@@ -6,8 +6,8 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from dependency_injector.wiring import inject, Provide
 
-from .services import SearchService
-from .containers import Container
+from .container import Container
+from .services.search_service import SearchService
 
 
 class Gif(BaseModel):
@@ -32,6 +32,7 @@ async def index(
         default_limit: int = Depends(Provide[Container.config.default.limit.as_int()]),
         search_service: SearchService = Depends(Provide[Container.search_service]),
 ):
+    return {}
     query = query or default_query
     limit = limit or default_limit
 

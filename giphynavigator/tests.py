@@ -6,7 +6,7 @@ import pytest
 from httpx import AsyncClient
 
 from giphynavigator.application import app
-from giphynavigator.services.giphy import GiphyClient
+from giphynavigator.services.giphy_service import GiphyService
 
 
 @pytest.fixture
@@ -17,7 +17,7 @@ async def client():
 
 @pytest.mark.asyncio
 async def test_index(client):
-    giphy_client_mock = mock.AsyncMock(spec=GiphyClient)
+    giphy_client_mock = mock.AsyncMock(spec=GiphyService)
     giphy_client_mock.search.return_value = {
         "data": [
             {"url": "https://giphy.com/gif1.gif"},
@@ -48,7 +48,7 @@ async def test_index(client):
 
 @pytest.mark.asyncio
 async def test_index_no_data(client):
-    giphy_client_mock = mock.AsyncMock(spec=GiphyClient)
+    giphy_client_mock = mock.AsyncMock(spec=GiphyService)
     giphy_client_mock.search.return_value = {
         "data": [],
     }
@@ -63,7 +63,7 @@ async def test_index_no_data(client):
 
 @pytest.mark.asyncio
 async def test_index_default_params(client):
-    giphy_client_mock = mock.AsyncMock(spec=GiphyClient)
+    giphy_client_mock = mock.AsyncMock(spec=GiphyService)
     giphy_client_mock.search.return_value = {
         "data": [],
     }

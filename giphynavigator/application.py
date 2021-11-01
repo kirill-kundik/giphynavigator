@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 
-from .containers import Container
+from .container import Container
 from . import endpoints
 
 
@@ -10,10 +10,10 @@ def create_app() -> FastAPI:
     container = Container()
     container.config.giphy.api_key.from_env("GIPHY_API_KEY")
 
-    app = FastAPI()
-    app.container = container
-    app.include_router(endpoints.router)
-    return app
+    web_app = FastAPI()
+    web_app.container = container
+    web_app.include_router(endpoints.router)
+    return web_app
 
 
 app = create_app()

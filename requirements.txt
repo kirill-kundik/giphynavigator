@@ -1,8 +1,11 @@
+aiohttp~=3.8.0
+aioredis~=2.0.0
 dependency-injector
-fastapi
-uvicorn
-aiohttp
-httpx
+fastapi~=0.70.0
+httpx~=0.20.0
 pyyaml
+pydantic~=1.8.2
+pytest~=6.2.5
 pytest-asyncio
 pytest-cov
+uvicorn
