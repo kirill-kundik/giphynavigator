@@ -6,7 +6,6 @@ services:
     build: .
     environment:
       REDIS_HOST: "redis"
-      REDIS_PASSWORD: "password"
       GIPHY_API_KEY: "${GIPHY_API_KEY}"
     ports:
       - "127.0.0.1:8000:8000"
@@ -17,6 +16,5 @@ services:
 
   redis:
     image: redis
-    command: [ "redis-server",  "--requirepass", "password" ]
     ports:
       - "127.0.0.1:6379:6379"
