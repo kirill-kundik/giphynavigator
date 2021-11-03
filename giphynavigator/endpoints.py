@@ -6,15 +6,21 @@ from dependency_injector.wiring import inject, Provide
 from fastapi import APIRouter, Depends
 
 from giphynavigator.container import Container
-from giphynavigator.models import SearchObject, Response
+from giphynavigator.models import SearchObject, Response, Gif, User
 from giphynavigator.services.search_service import SearchService
 
 router = APIRouter()
 
 
-@router.get("/", response_model=Response)
+# TODO:
+# @router.get("/gifs/{gif_id}", response_model=Gif)
+# @router.post("/registerSession", response_model=User)
+# @router.get("/sessions/{session_id}", response_model=User)
+# @router.post("/sessions/{session_id}/favorites", response_model=User)
+
+@router.get("/search", response_model=Response)
 @inject
-async def index(
+async def search(
         query: Optional[str] = None,
         limit: Optional[str] = None,
         offset: int = 0,
@@ -25,11 +31,11 @@ async def index(
     query = query or default_query
     limit = limit or default_limit
 
-    search: SearchObject = await search_service.search(query, limit, offset)
+    result: SearchObject = await search_service.search(query, limit, offset)
 
     return {
         "query": query,
         "limit": limit,
         "offset": offset,
-        "gifs": search.gifs,
+        "gifs": result.gifs,
     }
