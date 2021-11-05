@@ -20,14 +20,14 @@ async def test_index(client):
     giphy_client_mock = mock.AsyncMock(spec=GiphyService)
     giphy_client_mock.search.return_value = {
         "data": [
-            {"url": "https://giphy.com/gif1.gif"},
-            {"url": "https://giphy.com/gif2.gif"},
+            {"url": "https://giphy.com/gif1.gif", "id": "123", "embed_url": "123"},
+            {"url": "https://giphy.com/gif2.gif", "id": "124", "embed_url": "124"},
         ],
     }
 
     with app.container.giphy_client.override(giphy_client_mock):
         response = await client.get(
-            "/",
+            "/search",
             params={
                 "query": "test",
                 "limit": 10,
@@ -39,9 +39,24 @@ async def test_index(client):
     assert data == {
         "query": "test",
         "limit": 10,
+        "offset": 0,
         "gifs": [
-            {"url": "https://giphy.com/gif1.gif"},
-            {"url": "https://giphy.com/gif2.gif"},
+            {
+                "url": "https://giphy.com/gif1.gif",
+                "id": "123",
+                "embed_url": "123",
+                "author_avatar": "",
+                "author_profile": "",
+                "author_username": ""
+            },
+            {
+                "url": "https://giphy.com/gif2.gif",
+                "id": "124",
+                "embed_url": "124",
+                "author_avatar": "",
+                "author_profile": "",
+                "author_username": ""
+            },
         ],
     }
 
@@ -54,7 +69,7 @@ async def test_index_no_data(client):
     }
 
     with app.container.giphy_client.override(giphy_client_mock):
-        response = await client.get("/")
+        response = await client.get("/search")
 
     assert response.status_code == 200
     data = response.json()
@@ -69,7 +84,7 @@ async def test_index_default_params(client):
     }
 
     with app.container.giphy_client.override(giphy_client_mock):
-        response = await client.get("/")
+        response = await client.get("/search")
 
     assert response.status_code == 200
     data = response.json()
