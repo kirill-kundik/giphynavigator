@@ -1,6 +1,6 @@
 """Module with app models."""
 
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -14,18 +14,14 @@ class Gif(BaseModel):
     author_avatar: str = ""
 
 
-class User(BaseModel):
-    session_id: str
-    history: List[Gif] = []
-    favorites: List[Gif] = []
-
-
-class SearchObject(BaseModel):
-    gifs: List[Gif] = []
+class Session(BaseModel):
+    id: str
+    history: List[str] = []
+    favorites: List[str] = []
 
 
 class Response(BaseModel):
-    query: str
+    query: Optional[str] = None
     limit: int
     offset: int = 0
     gifs: List[Gif]

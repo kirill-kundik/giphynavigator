@@ -3,7 +3,7 @@
 from dependency_injector import containers, providers
 
 from giphynavigator import redis
-from giphynavigator.services import giphy_service, search_service, redis_service
+from giphynavigator.services import giphy_service, search_service, redis_service, session_service
 
 
 class Container(containers.DeclarativeContainer):
@@ -27,8 +27,14 @@ class Container(containers.DeclarativeContainer):
         redis=redis_pool,
     )
 
-    search_service = providers.Factory(
+    search_client = providers.Factory(
         search_service.SearchService,
         giphy_client=giphy_client,
         redis_service=redis_client,
+    )
+
+    session_client = providers.Factory(
+        session_service.SessionService,
+        redis_service=redis_client,
+        search_service=search_client,
     )

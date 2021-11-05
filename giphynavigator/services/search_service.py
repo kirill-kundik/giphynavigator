@@ -4,7 +4,7 @@ import asyncio
 import logging
 from typing import Optional, List
 
-from giphynavigator.models import Gif, SearchObject
+from giphynavigator.models import Gif
 from giphynavigator.services.giphy_service import GiphyService, GiphyServiceException
 from giphynavigator.services.redis_service import RedisService
 
@@ -68,10 +68,10 @@ class SearchService:
 
         return gif
 
-    async def search(self, query: str, limit: int = 25, offset: int = 0) -> SearchObject:
+    async def search(self, query: str, limit: int = 25, offset: int = 0) -> List[Gif]:
         """Search for gifs and return formatted data."""
         if not query:
-            return SearchObject()
+            return []
 
         results = await self._redis_service.get(f"search_{query}")
 
@@ -81,9 +81,4 @@ class SearchService:
         if 2 * limit + offset > len(results):
             asyncio.create_task(self._load(query, len(results)))
 
-        return SearchObject(
-            gifs=[
-                await self.gif(gif_id)
-                for gif_id in results[offset:limit + offset]
-            ]
-        )
+        return [await self.gif(gif_id) for gif_id in results[offset:limit + offset]]

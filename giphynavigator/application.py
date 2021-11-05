@@ -1,9 +1,11 @@
 """Application module."""
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 from giphynavigator import endpoints
 from giphynavigator.container import Container
+from giphynavigator.services.session_service import SessionServiceException
 
 
 def create_app() -> FastAPI:
@@ -18,3 +20,18 @@ def create_app() -> FastAPI:
 
 
 app = create_app()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.exception_handler(SessionServiceException)
+async def session_not_found_exception_handler(
+        _request: Request, _exc: SessionServiceException
+):
+    raise HTTPException(status_code=400, detail="You have to register your session.")
