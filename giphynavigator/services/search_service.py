@@ -19,7 +19,9 @@ class SearchService:
         gif = {
             "id": gif_object["id"],
             "url": gif_object["url"],
-            "embed_url": gif_object["embed_url"],
+            "embed_url": gif_object["images"]["fixed_width_downsampled"]["url"],
+            "embed_height": int(gif_object["images"]["fixed_width_downsampled"]["height"]),
+            "title": gif_object["title"]
         }
         if "user" in gif_object:
             gif["author_username"] = gif_object["user"]["username"]
@@ -48,6 +50,11 @@ class SearchService:
         await self._redis_service.set(f"search_{query}", ids_to_write)
 
         return ids
+
+    async def trending(self) -> List[Gif]:
+        results = await self._giphy_client.trending()
+
+        return [self._parse_gif(gif) for gif in results["data"]]
 
     async def gif(self, id_: str) -> Optional[Gif]:
         gif = await self._redis_service.get(f"gif_{id_}")

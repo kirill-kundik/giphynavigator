@@ -2,6 +2,7 @@
 
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from giphynavigator import endpoints
 from giphynavigator.container import Container
@@ -15,7 +16,8 @@ def create_app() -> FastAPI:
 
     web_app = FastAPI()
     web_app.container = container
-    web_app.include_router(endpoints.router)
+    web_app.include_router(endpoints.router, prefix="/api")
+    web_app.mount("/", StaticFiles(directory="giphynavigator/static", html=True), name="static")
     return web_app
 
 

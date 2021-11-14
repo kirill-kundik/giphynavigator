@@ -9,6 +9,8 @@ class Gif(BaseModel):
     id: str
     url: str
     embed_url: str
+    embed_height: int
+    title: str
     author_username: str = ""
     author_profile: str = ""
     author_avatar: str = ""

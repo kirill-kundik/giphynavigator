@@ -111,6 +111,14 @@ async def remove_favorites(
     await session_service.remove_favorite(session_id, item_id)
 
 
+@router.get("/gifs/trending", response_model=List[Gif], tags=["gifs"])
+@inject
+async def trending_gifs(
+        search_service: SearchService = Depends(Provide[Container.search_client])
+):
+    return await search_service.trending()
+
+
 @router.get("/gifs/{gif_id}", response_model=Gif, tags=["gifs"])
 @inject
 async def get_gif(
