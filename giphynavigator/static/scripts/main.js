@@ -1,7 +1,4 @@
 function scrollFooter(scrollY, heightFooter) {
-    console.log(scrollY);
-    console.log(heightFooter);
-
     if (scrollY >= heightFooter) {
         $('footer').css({
             'bottom': '0px'
@@ -14,13 +11,15 @@ function scrollFooter(scrollY, heightFooter) {
 }
 
 function getGifHtml(gifObject) {
-    return $(
-        "<div class=\"col-sm-4 col-md-3 py-2 gif-holder\">" +
-        "<div class=\"gif card\" style=\"height: " + gifObject.embed_height + "px\">" +
-        "<img src=\"" + gifObject.embed_url + "\">" +
+    return $("<div class=\"col-sm-3 col-md-2 py-2 gif-holder\">" +
+        "<div class=\"gif card\" style='height: " + gifObject.embed_height + "px; background: url(\"" + gifObject.embed_url + "\") no-repeat center; background-size: contain;'>" +
+        "<div class=\"description\">" +
+        "<div class=\"icons-holder hovered\">" +
+        "<i class=\"fas fa-heart\"></i>" +
+        "<i class=\"fas fa-share\"></i>" +
         "</div>" +
-        "</div>"
-    )
+        "<p class=\"title hovered\">" + gifObject.title + "</p>" +
+        "</div></div></div>");
 }
 
 function loadTrendingGifs() {
