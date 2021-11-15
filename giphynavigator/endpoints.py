@@ -111,7 +111,7 @@ async def remove_favorites(
     await session_service.remove_favorite(session_id, item_id)
 
 
-@router.get("/gifs/trending", response_model=List[Gif], tags=["gifs"])
+@router.get("/gifs/trending", response_model=Response, tags=["gifs"])
 @inject
 async def trending_gifs(
         limit: Optional[int] = Query(None, gt=0),
@@ -121,7 +121,9 @@ async def trending_gifs(
 ):
     limit: int = limit or default_limit
 
-    return await search_service.trending(limit, offset)
+    result = await search_service.trending(limit, offset)
+
+    return Response(limit=limit, offset=offset, gifs=result)
 
 
 @router.get("/gifs/{gif_id}", response_model=Gif, tags=["gifs"])

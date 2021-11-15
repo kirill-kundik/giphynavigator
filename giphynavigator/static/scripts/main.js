@@ -1,8 +1,8 @@
 const loadingLimit = 25;
 let pageOffset = 0;
+let canIncreaseOffset = true;
 
 let session;
-let sessionIsReady = false;
 
 function scrollFooter(scrollY, heightFooter) {
     if (scrollY >= heightFooter) {
@@ -69,6 +69,8 @@ function getGifHtml(gifObject) {
 }
 
 function addGifsToContainer(gifs, empty = false) {
+    if (gifs.length === 0) canIncreaseOffset = false;
+
     let gifsContainer = $('#gifs')
 
     if (empty) gifsContainer.empty();
@@ -132,33 +134,56 @@ function initializeSession() {
     }
 }
 
+function loadFavoritesGifs() {
+    let checkExist = setInterval(function () {
+        if (session !== undefined) {
+            clearInterval(checkExist);
+            $.ajax({
+                type: 'GET',
+                url: '/api/sessions/' + session.id + '/favorites?limit=' + loadingLimit + '&offset=' + pageOffset,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.hasOwnProperty('gifs'))
+                        addGifsToContainer(data.gifs)
+                    else
+                        alert("Cannot load GIFs")
+                }
+            });
+        }
+    }, 100); // check every 100ms
+}
+
 function loadTrendingGifs() {
     $.ajax({
         type: 'GET',
         url: '/api/gifs/trending?limit=' + loadingLimit + '&offset=' + pageOffset,
         dataType: 'json',
         success: function (data) {
-            addGifsToContainer(data)
+            if (data.hasOwnProperty('gifs'))
+                addGifsToContainer(data.gifs)
+            else
+                alert("Cannot load GIFs")
         }
     });
 }
 
 function loadGifs() {
     console.log("loading gifs... limit=" + loadingLimit + ", offset=" + pageOffset)
-    loadTrendingGifs();
+    if (window.location.pathname === "/") {
+        loadTrendingGifs();
+    } else if (window.location.pathname === "/favorites/") {
+        loadFavoritesGifs()
+    }
 }
 
 $(window).on('load', function () {
     initializeSession()
-    if (session === undefined) {
-        let checkExist = setInterval(function () {
-            if (session !== undefined) {
-                sessionIsReady = true;
-                console.log("Session initialized!");
-                clearInterval(checkExist);
-            }
-        }, 100); // check every 100ms
-    }
+    let checkExist = setInterval(function () {
+        if (session !== undefined) {
+            console.log("Session initialized!");
+            clearInterval(checkExist);
+        }
+    }, 100); // check every 100ms
     // let windowHeight = $(window).height()
     let footerHeight = $('footer').height()
 
@@ -187,6 +212,7 @@ $(window).on('load', function () {
     let loadMore = $('#loadMore')
     loadMore.click(function (e) {
         e.stopImmediatePropagation();
+        if (!canIncreaseOffset) return false;
         pageOffset += loadingLimit;
         loadGifs();
         return false;
