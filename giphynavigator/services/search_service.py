@@ -51,8 +51,8 @@ class SearchService:
 
         return ids
 
-    async def trending(self) -> List[Gif]:
-        results = await self._giphy_client.trending()
+    async def trending(self, limit, offset) -> List[Gif]:
+        results = await self._giphy_client.trending(limit, offset)
 
         return [self._parse_gif(gif) for gif in results["data"]]
 

@@ -222,6 +222,17 @@ header .header-container .header-block {
     margin-right: 10px;
 }
 
+#loadMore {
+    width: 100%;
+    text-align: center;
+    color: black;
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 20px;
+    cursor: pointer;
+    align-self: flex-end;
+}
+
 /* FOOTER */
 
 footer {
@@ -231,6 +242,37 @@ footer {
     bottom: -300px;
     position: fixed;
     z-index: -1;
+    color: white;
+}
+
+footer .container {
+    width: 100%;
+    height: 100%;
+    padding: 50px 0 50px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+footer .container .footer-menu .footer-menu-item {
+    color: white;
+    font-size: 20px;
+    margin: 10px 0;
+    font-weight: bolder;
+    cursor: pointer;
+}
+
+footer .container .footer-menu .title {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+footer .container .footer-copyright {
+    font-size: 14px;
+    color: darkgray;
+    width: 100%;
+    text-align: center;
 }
 
 /* ANIMATIONS */

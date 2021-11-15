@@ -14,8 +14,10 @@ class GiphyService:
         self._api_key = api_key
         self._timeout = ClientTimeout(timeout)
 
-    async def trending(self) -> dict:
-        return await self._fetch(f"{self.API_URL}/gifs/trending", {"limit": 25})
+    async def trending(self, limit, offset) -> dict:
+        params = {"limit": limit, "offset": offset}
+
+        return await self._fetch(f"{self.API_URL}/gifs/trending", params)
 
     async def gif(self, id_: str) -> dict:
         try:

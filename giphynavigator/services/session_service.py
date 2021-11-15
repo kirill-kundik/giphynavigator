@@ -21,7 +21,7 @@ class SessionService:
 
     @staticmethod
     def register() -> Session:
-        return Session(id=uuid.uuid4())
+        return Session(id=str(uuid.uuid4()))
 
     async def _load_gifs(self, ids: List[str]) -> List[Gif]:
         gifs = [await self._search_service.gif(gif_id) for gif_id in ids]

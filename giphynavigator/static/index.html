@@ -25,7 +25,7 @@
             <header>
                 <div class="header-container container">
                     <div class="header-block">
-                        <div id="home">GIFs</div>
+                        <div id="home" onclick="window.location.href='/'">GIFs</div>
                         <div class="field">
                             <input type="text" id="search" required autocomplete="off">
                             <label for="search" title="Search GIFs..." data-title="Searching..."></label>
@@ -47,11 +47,28 @@
                 <div class="container">
                     <h1>Trending now</h1>
                     <div class="row" data-masonry='{"percentPosition": true }' id="gifs"></div>
+                    <div id="loadMore" style="display: none">Not satisfied yet? 😅<br>Click to load more</div>
                 </div>
             </section>
 
             <footer>
-                <h1>Footer</h1>
+                <div class="container">
+                    <div class="footer-menu row">
+                        <div class="col menu">
+                            <p class="footer-menu-item" onclick="window.location.href='/'">All GIFs</p>
+                            <p class="footer-menu-item">Your favorites</p>
+                            <p class="footer-menu-item">Your search history</p>
+                        </div>
+                        <div class="col title" onclick="window.open('https://en.wikipedia.org/wiki/GIF')">
+                            <h2><b>GIF</b> - a lossless format for image files that supports both animated and static
+                                images.</h2>
+                        </div>
+                    </div>
+                    <div class="footer-copyright">
+                        This site is only for educational purpose only. Developed by Kundik Kyrylo and Radzievska
+                        Oleksandra. All rights reserved. © 2021
+                    </div>
+                </div>
             </footer>
         </div>
     </div>
