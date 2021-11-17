@@ -33,6 +33,25 @@ function checkGifInFavorites(gifId) {
     return session.favorites.includes(gifId)
 }
 
+function displayHistory() {
+    let historyContainer = $('#history');
+
+    historyContainer.empty();
+    historyContainer.append($("<h2 class=\"history-title\">Search History</h2>"))
+
+    $.each(session.history, function (index, element) {
+        historyContainer.append(
+            $("<p class=\"history-item\">" + element + "</p>")
+        )
+    })
+
+    $('.history-item').click(function (e) {
+        e.stopImmediatePropagation();
+        window.location.href = "/search?q=" + $(this).text();
+        return false;
+    })
+}
+
 function addToFavorites(gifId) {
     $.ajax({
         type: 'POST',
@@ -141,6 +160,31 @@ function initializeSession() {
     }
 }
 
+function addToHistory(query) {
+    let checkExist = setInterval(function () {
+        if (session !== undefined) {
+            clearInterval(checkExist);
+            $.ajax({
+                type: 'POST',
+                url: '/api/sessions/' + session.id + '/history?query=' + query,
+                dataType: 'json',
+                success: function () {
+                    if (session.history.includes(query)) {
+                        const index = session.history.indexOf(query);
+                        if (index > -1) {
+                            session.history.splice(index, 1);
+                        }
+                    }
+                    session.history.unshift(query)
+                    session.history = session.history.slice(0, 10);
+
+                    displayHistory();
+                }
+            });
+        }
+    }, 100); // check every 100ms
+}
+
 function loadSearchGifs() {
     $.ajax({
         type: 'GET',
@@ -210,6 +254,7 @@ $(window).on('load', function () {
         if (session !== undefined) {
             console.log("Session initialized!");
             clearInterval(checkExist);
+            displayHistory();
         }
     }, 100); // check every 100ms
     // let windowHeight = $(window).height()
@@ -271,7 +316,27 @@ $(window).on('load', function () {
     })
 
     if (q !== null) {
+        addToHistory(q)
         searchInput.val(q);
         $('#resultTitle').text("Results for: '" + q + "'")
     }
+
+    let history = $('#history');
+    $('#historyBtn').click(function (e) {
+        e.stopImmediatePropagation();
+        if (history.hasClass("active")) {
+            history.removeClass("active");
+            history.hide("middle")
+        } else {
+            history.addClass("active");
+            history.show("middle")
+        }
+        return false;
+    })
+    $('#footerHistoryBtn').click(function (e) {
+        e.stopImmediatePropagation();
+        window.scrollTo(0, 0);
+        history.addClass("active");
+        history.show("middle")
+    });
 });

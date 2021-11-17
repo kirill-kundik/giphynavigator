@@ -39,40 +39,14 @@ async def get_session(
     return await session_service.load(session_id)
 
 
-@router.get("/sessions/{session_id}/history", response_model=Response, tags=["sessions"])
-@inject
-async def get_history(
-        session_id: str = Path(..., title="The id of the Session to get", regex=UUID_REGEX),
-        limit: Optional[int] = Query(None, gt=0),
-        offset: int = Query(0, ge=0),
-        default_limit: int = Depends(Provide[Container.config.default.limit.as_int()]),
-        session_service: SessionService = Depends(Provide[Container.session_client]),
-):
-    limit: int = limit or default_limit
-
-    result: List[Gif] = await session_service.history(session_id, limit, offset)
-
-    return Response(limit=limit, offset=offset, gifs=result)
-
-
 @router.post("/sessions/{session_id}/history", status_code=200, tags=["sessions"])
 @inject
 async def add_history(
-        item_id: str,
+        query: str = Query(..., min_length=1),
         session_id: str = Path(..., title="The id of the Session to get", regex=UUID_REGEX),
         session_service: SessionService = Depends(Provide[Container.session_client])
 ):
-    await session_service.add_history(session_id, item_id)
-
-
-@router.delete("/sessions/{session_id}/history", status_code=200, tags=["sessions"])
-@inject
-async def remove_history(
-        item_id: str,
-        session_id: str = Path(..., title="The id of the Session to get", regex=UUID_REGEX),
-        session_service: SessionService = Depends(Provide[Container.session_client])
-):
-    await session_service.remove_history(session_id, item_id)
+    await session_service.add_history(session_id, query)
 
 
 @router.get("/sessions/{session_id}/favorites", response_model=Response, tags=["sessions"])

@@ -40,25 +40,20 @@ class SessionService:
             return Session(**session)
         raise SessionNotFoundException
 
-    async def history(self, session_id: str, limit: int = 25, offset: int = 0) -> List[Gif]:
-        session = await self.load(session_id)
-
-        return await self._load_gifs(session.history[offset:offset + limit])
-
     async def favorites(self, session_id: str, limit: int = 25, offset: int = 0) -> List[Gif]:
         session = await self.load(session_id)
 
         return await self._load_gifs(session.favorites[offset:offset + limit])
 
-    async def add_history(self, session_id: str, history_id: str) -> Session:
+    async def add_history(self, session_id: str, query: str) -> Session:
         session = await self.load(session_id)
 
         history = dict.fromkeys(session.history)
-        if history_id in history:
-            del history[history_id]
+        if query in history:
+            del history[query]
 
-        history[history_id] = None
-        session.history = list(history)
+        history = {query: None, **history}
+        session.history = list(history)[:10]
 
         await self.save(session)
 

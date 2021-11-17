@@ -30,10 +30,10 @@
                             <input type="text" id="search" required autocomplete="off">
                             <label for="search" title="Search GIFs..." data-title="Searching..."></label>
                         </div>
-                        <div>
+                        <div class="header-btns">
                             <i class="fas fa-heart" onclick="window.location.href='/favorites'"
                                style="margin-right: 30px"></i>
-                            <i class="fas fa-history"></i>
+                            <i class="fas fa-history" id="historyBtn"></i>
                         </div>
                     </div>
                     <div class="header-text">
@@ -45,8 +45,9 @@
             </header>
 
             <section class="content">
+                <div id="history"></div>
                 <div class="container">
-                    <h1 id="resultTitle"><i>Results for: ''</i></h1>
+                    <h1 id="resultTitle">Results for: ''</h1>
                     <div class="row" data-masonry='{"percentPosition": true }' id="gifs"></div>
                     <div id="loadMore" style="display: none">Not satisfied yet? 😅<br>Click to load more</div>
                 </div>
@@ -58,7 +59,7 @@
                         <div class="col menu">
                             <p class="footer-menu-item" onclick="window.location.href='/'">All GIFs</p>
                             <p class="footer-menu-item" onclick="window.location.href='/favorites'">Your favorites</p>
-                            <p class="footer-menu-item">Your search history</p>
+                            <p class="footer-menu-item" id="footerHistoryBtn">Your search history</p>
                         </div>
                         <div class="col title" onclick="window.open('https://en.wikipedia.org/wiki/GIF')">
                             <h2><b>GIF</b> - a lossless format for image files that supports both animated and static
