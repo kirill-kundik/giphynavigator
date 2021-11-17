@@ -60,7 +60,7 @@ function removeFromFavorites(gifId) {
 
 function getGifHtml(gifObject) {
     let addedToFavorites = checkGifInFavorites(gifObject.id);
-    return $("<div class=\"col-sm-3 col-md-2 py-2 gif-holder\">" +
+    return $("<div class=\"col-sm-3 col-md-2 py-2 gif-holder\" id=\"gif_" + gifObject.id + "\">" +
         "<div class=\"gif card\" style='height: " + gifObject.embed_height + "px; background: url(\"" + gifObject.embed_url + "\") no-repeat center; background-size: contain;'>" +
         "<div class=\"description\">" +
         "<div class=\"icons-holder hovered\">" +
@@ -89,6 +89,10 @@ function addGifsToContainer(gifs, empty = false) {
             if (checkGifInFavorites(gifId)) {
                 removeFromFavorites(gifId)
                 $(this).css({'color': 'white'});
+                if (window.location.pathname === "/favorites/") {
+                    $("#gif_" + gifId).remove();
+                    gifsContainer.masonry();
+                }
             } else {
                 addToFavorites(gifId)
                 $(this).css({'color': 'red'});
