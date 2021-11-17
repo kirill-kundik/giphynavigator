@@ -45,6 +45,12 @@ function displayHistory() {
         )
     })
 
+    if(session.history.length === 0) {
+        historyContainer.append(
+            $("<p style='text-align: center; margin-bottom: 5px'><small>Empty 😢</small></p>")
+        )
+    }
+
     $('.history-item').click(function (e) {
         e.stopImmediatePropagation();
         window.location.href = "/search?q=" + $(this).text();

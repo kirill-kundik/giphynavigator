@@ -217,6 +217,7 @@ header .header-container .header-block {
     padding: 10px 20px;
     box-shadow: 0 0 5px 5px rgba(200, 200, 200, 0.7);
     z-index: 100;
+    counter-reset: section;
 }
 
 #history .history-title {
@@ -224,7 +225,9 @@ header .header-container .header-block {
     color: black;
     width: 100%;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid lightgray;
 }
 
 #history .history-item {
@@ -234,10 +237,15 @@ header .header-container .header-block {
     cursor: pointer;
 }
 
+#history .history-item::before {
+    counter-increment: section;
+    content: counters(section, ".") " ";
+}
+
 #history .history-item:not(:last-child) {
-    border-bottom: 1px solid black;
-    padding-bottom: 7px;
-    margin-bottom: 20px;
+    border-bottom: 2px solid lightgray;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 /* CONTENT */
