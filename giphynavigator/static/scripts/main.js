@@ -2,6 +2,9 @@ const loadingLimit = 25;
 let pageOffset = 0;
 let canIncreaseOffset = true;
 
+const urlParams = new URLSearchParams(window.location.search);
+const q = urlParams.get('q');
+
 let session;
 
 function scrollFooter(scrollY, heightFooter) {
@@ -134,6 +137,20 @@ function initializeSession() {
     }
 }
 
+function loadSearchGifs() {
+    $.ajax({
+        type: 'GET',
+        url: '/api/search?query=' + q + '&limit=' + loadingLimit + '&offset=' + pageOffset,
+        dataType: 'json',
+        success: function (data) {
+            if (data.hasOwnProperty('gifs'))
+                addGifsToContainer(data.gifs)
+            else
+                alert("Cannot load GIFs")
+        }
+    });
+}
+
 function loadFavoritesGifs() {
     let checkExist = setInterval(function () {
         if (session !== undefined) {
@@ -168,11 +185,18 @@ function loadTrendingGifs() {
 }
 
 function loadGifs() {
-    console.log("loading gifs... limit=" + loadingLimit + ", offset=" + pageOffset)
-    if (window.location.pathname === "/") {
-        loadTrendingGifs();
-    } else if (window.location.pathname === "/favorites/") {
-        loadFavoritesGifs()
+    console.log("loading gifs... limit=" + loadingLimit + ", offset=" + pageOffset + ", page=" + window.location.pathname)
+
+    switch (window.location.pathname) {
+        case "/favorites/":
+            loadFavoritesGifs();
+            break;
+        case "/search/":
+            loadSearchGifs();
+            break;
+        case "/":
+        default:
+            loadTrendingGifs();
     }
 }
 
@@ -220,4 +244,30 @@ $(window).on('load', function () {
     loadMore.show(1000, function () {
         reloadDocumentHeight()
     })
+
+    let searchInput = $('#search')
+    let searchInputField = $('#searchField')
+
+    $(document).on('keypress', function (e) {
+        if (e.keyCode === 13) {
+            const query = searchInput.val()
+            if (query === '') {
+                searchInputField.attr('data-tooltip', 'Search cannot be empty')
+                searchInput.focus()
+                window.scrollTo(0, 0)
+                return false;
+            }
+            window.location.href = "/search?q=" + query;
+            return false;
+        }
+    });
+
+    searchInput.on('input', function () {
+        searchInputField.attr('data-tooltip', 'Hit Enter ⏎')
+    })
+
+    if (q !== null) {
+        searchInput.val(q);
+        $('#resultTitle').text("Results for: '" + q + "'")
+    }
 });
