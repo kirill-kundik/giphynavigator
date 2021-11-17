@@ -333,9 +333,11 @@ $(window).on('load', function () {
         if (history.hasClass("active")) {
             history.removeClass("active");
             history.hide("middle")
+            $(this).css({ "color": "white" })
         } else {
             history.addClass("active");
             history.show("middle")
+            $(this).css({ "color": "limegreen" })
         }
         return false;
     })
